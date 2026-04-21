@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Firimbi Tips – User Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --primary:#5b21b6;--primary-glow:#7c3aed;--accent:#f59e0b;--accent2:#10b981;
+  --danger:#ef4444;--warn:#f97316;--bg-deep:#030712;--bg-card:rgba(15,20,50,0.92);
+  --bg-glass:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.07);--text:#e2e8f0;
+  --text-muted:#64748b;--gold:#f5c51c;--vip-grad:linear-gradient(135deg,#f59e0b,#ef4444,#7c3aed);
+  --green:#22c55e;--red:#ef4444;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg-deep);color:var(--text);min-height:100vh;font-family:'Exo 2',sans-serif;overflow-x:hidden;padding-bottom:60px}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 20% -10%,rgba(91,33,182,0.25) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 110%,rgba(245,158,11,0.12) 0%,transparent 60%),radial-gradient(ellipse 40% 30% at 50% 50%,rgba(16,185,129,0.05) 0%,transparent 70%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(91,33,182,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(91,33,182,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.container{max-width:900px;margin:auto;padding:16px;position:relative;z-index:1}
+
+/* TOPBAR */
+.topbar{background:rgba(5,10,30,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(91,33,182,0.4);padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 30px rgba(91,33,182,0.2)}
+.topbar-brand{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;letter-spacing:3px;background:var(--vip-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.topbar-date{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-muted);letter-spacing:1px}
+
+/* NOTIFICATION BADGE IN TOPBAR */
+.topbar-right{display:flex;align-items:center;gap:14px}
+.notif-bell-wrap{position:relative;cursor:pointer}
+.notif-bell-wrap .bell-icon{font-size:22px;transition:transform 0.2s}
+.notif-bell-wrap:hover .bell-icon{transform:rotate(15deg)}
+.notif-badge{position:absolute;top:-6px;right:-8px;background:var(--danger);color:#fff;font-size:10px;font-weight:800;font-family:'Rajdhani',sans-serif;border-radius:999px;min-width:18px;height:18px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--bg-deep);animation:badgePop 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes badgePop{from{transform:scale(0)}to{transform:scale(1)}}
+.notif-badge.hidden{display:none}
+
+/* CARDS */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:24px;margin-bottom:18px;backdrop-filter:blur(12px);position:relative;overflow:hidden;transition:border-color 0.3s}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(91,33,182,0.6),rgba(245,158,11,0.4),transparent)}
+.card:hover{border-color:rgba(91,33,182,0.3)}
+.card-title{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:1px;display:flex;align-items:center;gap:10px;margin-bottom:18px;color:#fff}
+.card-title .icon{font-size:20px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:12px;padding:14px 20px;font-size:15px;font-weight:700;font-family:'Exo 2',sans-serif;cursor:pointer;transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);width:100%;letter-spacing:0.5px;position:relative;overflow:hidden}
+.btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background 0.2s}
+.btn:hover::after{background:rgba(255,255,255,0.08)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,0.3)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.btn-primary{background:linear-gradient(135deg,#5b21b6,#7c3aed);color:#fff;box-shadow:0 4px 15px rgba(91,33,182,0.4)}
+.btn-gold{background:linear-gradient(135deg,#d97706,#f59e0b);color:#000;box-shadow:0 4px 15px rgba(245,158,11,0.3)}
+.btn-green{background:linear-gradient(135deg,#059669,#10b981);color:#fff;box-shadow:0 4px 15px rgba(16,185,129,0.3)}
+.btn-red{background:linear-gradient(135deg,#b91c1c,#ef4444);color:#fff;box-shadow:0 4px 15px rgba(239,68,68,0.3)}
+.btn-blue{background:linear-gradient(135deg,#0369a1,#0ea5e9);color:#fff;box-shadow:0 4px 15px rgba(14,165,233,0.3)}
+.btn-glass{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff}
+.btn-sm{padding:10px 16px;font-size:13px;border-radius:10px;width:auto}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+/* QUICK PAY BUTTON */
+.quick-pay-btn{background:linear-gradient(135deg,#f59e0b,#ef4444,#7c3aed);color:#fff;border:none;border-radius:16px;padding:16px 24px;font-size:16px;font-weight:800;font-family:'Exo 2',sans-serif;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;letter-spacing:1px;box-shadow:0 6px 20px rgba(245,158,11,0.4);transition:all 0.3s;margin-top:12px;position:relative;overflow:hidden}
+.quick-pay-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent);opacity:0;transition:opacity 0.3s}
+.quick-pay-btn:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(245,158,11,0.5)}
+.quick-pay-btn:hover::before{opacity:1}
+
+/* INPUTS */
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+.form-input{width:100%;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px 16px;font-size:15px;color:#fff;font-family:'Exo 2',sans-serif;transition:all 0.25s;outline:none}
+.form-input:focus{border-color:rgba(91,33,182,0.6);background:rgba(91,33,182,0.08);box-shadow:0 0 0 3px rgba(91,33,182,0.15)}
+.form-input::placeholder{color:rgba(255,255,255,0.2)}
+
+/* NAV TABS - 6 tabs now */
+.nav-tabs{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;background:rgba(0,0,0,0.3);border-radius:16px;padding:8px;border:1px solid var(--border)}
+.nav-tab{background:transparent;border:none;border-radius:10px;padding:10px 4px;font-size:10px;font-weight:700;font-family:'Exo 2',sans-serif;color:var(--text-muted);cursor:pointer;transition:all 0.25s;text-align:center;letter-spacing:0.5px;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative}
+.nav-tab .nav-icon{font-size:17px}
+.nav-tab.active{background:linear-gradient(135deg,rgba(91,33,182,0.6),rgba(124,58,237,0.4));color:#fff;box-shadow:0 4px 12px rgba(91,33,182,0.3);border:1px solid rgba(91,33,182,0.4)}
+.nav-tab:hover:not(.active){background:rgba(255,255,255,0.05);color:var(--text)}
+.nav-tab-badge{position:absolute;top:2px;right:4px;background:var(--danger);color:#fff;font-size:9px;font-weight:800;border-radius:999px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid var(--bg-card)}
+.nav-tab-badge.hidden{display:none}
+
+/* SECTIONS */
+.section{display:none;animation:sectionIn 0.35s cubic-bezier(0.34,1.2,0.64,1)}
+.section.active{display:block}
+@keyframes sectionIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* TIP CARDS */
+.tip-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:18px;margin-top:12px;transition:all 0.25s;position:relative;overflow:hidden}
+.tip-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent2);border-radius:4px 0 0 4px}
+.tip-card.vip-tip::before{background:var(--vip-grad)}
+.tip-card:hover{background:rgba(255,255,255,0.06);transform:translateX(4px)}
+.tip-match{font-size:17px;font-weight:700;margin-bottom:4px}
+.tip-league{font-size:12px;color:var(--text-muted);font-family:'Share Tech Mono',monospace;letter-spacing:1px}
+.tip-pick{font-size:16px;font-weight:700;color:var(--accent);margin-top:10px}
+.tip-desc{font-size:13px;color:rgba(255,255,255,0.6);margin-top:6px;line-height:1.5}
+.tip-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;font-family:'Rajdhani',sans-serif}
+.badge-free{background:rgba(100,116,139,0.2);color:#94a3b8;border:1px solid rgba(100,116,139,0.3)}
+.badge-vip{background:rgba(245,197,28,0.15);color:#f5c51c;border:1px solid rgba(245,197,28,0.4)}
+.badge-won{background:rgba(34,197,94,0.15);color:#4ade80;border:1px solid rgba(34,197,94,0.4)}
+.badge-lost{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3)}
+.badge-pending{background:rgba(251,146,60,0.15);color:#fb923c;border:1px solid rgba(251,146,60,0.3)}
+.badge-high{background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3)}
+.badge-medium{background:rgba(234,179,8,0.15);color:#facc15;border:1px solid rgba(234,179,8,0.3)}
+.badge-low{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3)}
+
+/* VIP COUNTDOWN BAR */
+.vip-status-bar{background:rgba(0,0,0,0.4);border:1px solid rgba(91,33,182,0.3);border-radius:16px;padding:16px;margin-bottom:16px}
+.vip-bar-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:13px;font-weight:700}
+.vip-progress-track{height:12px;background:rgba(0,0,0,0.4);border-radius:999px;overflow:hidden;position:relative}
+.vip-progress-fill{height:100%;border-radius:999px;transition:width 1s linear,background 1s;position:relative;overflow:hidden}
+.vip-progress-fill::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);animation:shimmer 2s infinite}
+@keyframes shimmer{to{left:100%}}
+.vip-timer-text{font-family:'Share Tech Mono',monospace;font-size:22px;font-weight:700;text-align:center;margin-top:10px;letter-spacing:2px}
+@keyframes dangerPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}50%{box-shadow:0 0 20px 5px rgba(239,68,68,0.4)}}
+.vip-status-bar.danger{animation:dangerPulse 1.5s infinite}
+.vip-status-bar.danger .vip-progress-fill{background:linear-gradient(90deg,#b91c1c,#ef4444)!important}
+
+/* LOCK BOX */
+.lock-box{border:2px dashed rgba(91,33,182,0.3);border-radius:20px;padding:32px 24px;text-align:center;background:rgba(91,33,182,0.04);position:relative;overflow:hidden}
+.lock-box::before{content:'🔒';position:absolute;font-size:120px;opacity:0.04;top:50%;left:50%;transform:translate(-50%,-50%)}
+.lock-title{font-size:22px;font-weight:800;font-family:'Rajdhani',sans-serif;margin-bottom:8px}
+.lock-sub{color:var(--text-muted);font-size:14px;line-height:1.6;margin-bottom:20px}
+
+/* AUTH CARD */
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;background:rgba(0,0,0,0.3);border-radius:12px;padding:4px;margin-bottom:20px;border:1px solid var(--border)}
+.auth-tab{border:none;background:transparent;border-radius:10px;padding:12px;font-size:15px;font-weight:700;font-family:'Exo 2',sans-serif;color:var(--text-muted);cursor:pointer;transition:all 0.25s}
+.auth-tab.active{background:linear-gradient(135deg,rgba(91,33,182,0.8),rgba(124,58,237,0.6));color:#fff;box-shadow:0 4px 12px rgba(91,33,182,0.3)}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#1f2937;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;font-family:'Exo 2',sans-serif;cursor:pointer;width:100%;margin-top:12px;transition:all 0.25s;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.google-btn:hover{background:#f9fafb;transform:translateY(-2px)}
+.google-icon{width:20px;height:20px}
+
+/* NOTIFICATION CARDS */
+.notif-card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:14px;padding:16px;margin-top:12px;position:relative;transition:all 0.25s}
+.notif-card.unread{border-color:rgba(91,33,182,0.4);background:rgba(91,33,182,0.06)}
+.notif-card.unread::after{content:'';position:absolute;top:12px;right:12px;width:8px;height:8px;background:var(--primary-glow);border-radius:50%;box-shadow:0 0 8px var(--primary-glow)}
+.notif-card.private{border-color:rgba(245,197,28,0.3);background:rgba(245,197,28,0.04)}
+.notif-card.private::before{content:'🔒 PRIVATE';position:absolute;top:10px;right:12px;font-size:10px;font-weight:800;letter-spacing:1px;color:var(--gold);font-family:'Share Tech Mono',monospace}
+.notif-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:6px}
+.notif-msg{font-size:14px;color:rgba(255,255,255,0.65);line-height:1.6}
+.notif-time{font-size:11px;color:var(--text-muted);margin-top:8px;font-family:'Share Tech Mono',monospace}
+
+/* PAYMENT PROOF */
+.proof-section{background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.2);border-radius:16px;padding:20px;margin-top:16px}
+.proof-section h3{color:var(--accent2);margin-bottom:14px;font-family:'Rajdhani',sans-serif;font-size:20px}
+
+/* PAYMENT AMOUNT BOX */
+.pay-amount-box{background:rgba(245,158,11,0.08);border:2px solid rgba(245,158,11,0.4);border-radius:16px;padding:20px;text-align:center;margin:16px 0}
+.pay-amount-label{font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:700}
+.pay-amount-num{font-size:36px;font-weight:900;font-family:'Rajdhani',sans-serif;color:var(--gold)}
+.pay-amount-currency{font-size:14px;color:var(--text-muted);margin-top:2px}
+.pay-merchant-info{font-size:13px;color:rgba(255,255,255,0.7);margin-top:10px;font-family:'Share Tech Mono',monospace}
+.pay-divider{height:1px;background:rgba(245,158,11,0.2);margin:16px 0}
+.ussd-btn{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:800;font-family:'Exo 2',sans-serif;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 6px 20px rgba(220,38,38,0.4);transition:all 0.25s;margin-top:10px}
+.ussd-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(220,38,38,0.5)}
+
+/* COINS */
+.coins-display{display:flex;align-items:center;gap:16px;background:rgba(245,197,28,0.08);border:1px solid rgba(245,197,28,0.25);border-radius:16px;padding:16px 20px;margin-bottom:16px}
+.coins-icon{font-size:36px}
+.coins-info h3{font-size:18px;font-weight:800;color:var(--gold)}
+.coins-info p{font-size:13px;color:var(--text-muted)}
+.coins-bar{flex:1;height:8px;background:rgba(0,0,0,0.3);border-radius:999px;overflow:hidden}
+.coins-fill{height:100%;background:linear-gradient(90deg,#d97706,#f59e0b);border-radius:999px;transition:width 0.5s}
+
+/* PROFILE */
+.profile-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#5b21b6,#f59e0b);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:16px;box-shadow:0 8px 24px rgba(91,33,182,0.4)}
+.profile-name{font-size:24px;font-weight:800;font-family:'Rajdhani',sans-serif;margin-bottom:4px}
+.profile-detail{font-size:13px;color:var(--text-muted);margin-bottom:4px;font-family:'Share Tech Mono',monospace}
+
+/* PLAN CARDS */
+.plan-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
+.plan-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:18px;text-align:center;transition:all 0.25s;cursor:pointer;position:relative;overflow:hidden}
+.plan-card:hover,.plan-card.selected{border-color:rgba(245,197,28,0.5);background:rgba(245,197,28,0.06);transform:scale(1.02)}
+.plan-card.selected::after{content:'✓ SELECTED';position:absolute;top:8px;right:10px;font-size:9px;font-weight:800;color:var(--gold);font-family:'Share Tech Mono',monospace;letter-spacing:1px}
+.plan-name{font-size:14px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;font-family:'Rajdhani',sans-serif}
+.plan-price{font-size:22px;font-weight:900;color:#fff;font-family:'Rajdhani',sans-serif}
+.plan-currency{font-size:12px;color:var(--text-muted);margin-top:2px}
+.plan-card.yearly{grid-column:1/-1;background:rgba(91,33,182,0.08);border-color:rgba(91,33,182,0.3)}
+
+/* PENDING OVERLAY */
+.pending-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:10000;padding:20px;backdrop-filter:blur(10px)}
+.pending-overlay.show{display:flex}
+.pending-box{background:#0f172a;border:1px solid rgba(91,33,182,0.4);border-radius:24px;padding:36px 28px;text-align:center;max-width:380px;width:100%;box-shadow:0 25px 60px rgba(91,33,182,0.3);animation:slideUp 0.4s cubic-bezier(0.34,1.4,0.64,1)}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.pending-title{font-size:22px;font-weight:800;font-family:'Rajdhani',sans-serif;margin-bottom:8px}
+.pending-sub{color:var(--text-muted);font-size:14px;line-height:1.6}
+
+/* LEADERBOARD */
+.leaderboard-item{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:14px 16px;margin-top:10px;transition:all 0.25s}
+.leaderboard-item:hover{background:rgba(255,255,255,0.06)}
+.leaderboard-rank{font-size:20px;font-weight:900;font-family:'Rajdhani',sans-serif;min-width:36px;text-align:center}
+.leaderboard-rank.rank-1{color:#f5c51c}
+.leaderboard-rank.rank-2{color:#94a3b8}
+.leaderboard-rank.rank-3{color:#cd7c2a}
+.leaderboard-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#5b21b6,#f59e0b);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.leaderboard-info{flex:1}
+.leaderboard-name{font-size:15px;font-weight:700}
+.leaderboard-stat{font-size:12px;color:var(--text-muted);margin-top:2px;font-family:'Share Tech Mono',monospace}
+.leaderboard-score{font-size:18px;font-weight:800;font-family:'Rajdhani',sans-serif;color:var(--gold)}
+
+/* MONTHLY PROGRESS GRAPH */
+.win-graph-wrap{background:rgba(0,0,0,0.3);border:1px solid rgba(91,33,182,0.2);border-radius:16px;padding:16px;margin-top:12px;overflow:hidden}
+#winRateCanvas{width:100%;height:180px;display:block}
+.win-graph-legend{display:flex;gap:16px;margin-top:10px;font-size:12px;color:var(--text-muted);justify-content:center}
+.win-graph-legend span{display:flex;align-items:center;gap:6px}
+.win-graph-legend .dot{width:8px;height:8px;border-radius:50%}
+
+/* HISTORY */
+.history-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:14px;padding:16px;margin-top:10px;transition:all 0.25s}
+.history-card.won{border-left:4px solid #22c55e;background:rgba(34,197,94,0.04)}
+.history-card.lost{border-left:4px solid #ef4444;background:rgba(239,68,68,0.04)}
+.history-cat-header{font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin:18px 0 8px;padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid var(--primary-glow)}
+
+/* MESSAGES */
+.msg-success{color:#4ade80;font-weight:700;font-size:14px;padding:12px 16px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:10px;margin-top:10px;animation:fadeIn 0.3s}
+.msg-error{color:#f87171;font-weight:700;font-size:14px;padding:12px 16px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;margin-top:10px;animation:fadeIn 0.3s}
+.msg-info{color:#60a5fa;font-weight:700;font-size:14px;padding:12px 16px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);border-radius:10px;margin-top:10px;animation:fadeIn 0.3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.empty-state{text-align:center;padding:32px;color:var(--text-muted);font-size:14px}
+.empty-state .icon{font-size:36px;display:block;margin-bottom:10px}
+
+/* AIRTEL */
+.airtel-btn{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;font-family:'Exo 2',sans-serif;cursor:pointer;width:100%;margin-top:10px;transition:all 0.25s;box-shadow:0 4px 15px rgba(220,38,38,0.4)}
+.airtel-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(220,38,38,0.5)}
+.airtel-promo{background:linear-gradient(135deg,rgba(220,38,38,0.15),rgba(239,68,68,0.05));border:1px solid rgba(220,38,38,0.3);border-radius:14px;padding:14px 16px;margin-top:12px;display:flex;align-items:center;gap:12px}
+.airtel-logo{font-size:28px}
+.airtel-info h4{font-size:14px;font-weight:700;color:#f87171;margin-bottom:2px}
+.airtel-info p{font-size:12px;color:var(--text-muted)}
+
+/* CHECK-IN */
+.checkin-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:12px}
+.checkin-day{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);color:var(--text-muted);font-family:'Share Tech Mono',monospace}
+.checkin-day.done{background:rgba(34,197,94,0.2);border-color:rgba(34,197,94,0.4);color:#4ade80}
+.checkin-day.today{border-color:rgba(245,197,28,0.5);color:var(--gold);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(245,197,28,0.4)}50%{box-shadow:0 0 0 6px rgba(245,197,28,0)}}
+
+/* DIALOG */
+.dialog-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;backdrop-filter:blur(8px)}
+.dialog-overlay.show{display:flex}
+.dialog-box{width:100%;max-width:420px;background:#0f172a;border:1px solid rgba(91,33,182,0.4);border-radius:24px;padding:28px 24px;box-shadow:0 25px 60px rgba(0,0,0,0.6);animation:slideUp 0.3s cubic-bezier(0.34,1.4,0.64,1)}
+.dialog-title{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:var(--gold);margin-bottom:10px}
+.dialog-msg{color:var(--text);font-size:15px;line-height:1.6}
+
+/* STATUS DOT */
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+.dot-green{background:#22c55e;box-shadow:0 0 6px #22c55e}
+.dot-gold{background:#f5c51c;box-shadow:0 0 6px #f5c51c}
+.dot-red{background:#ef4444;box-shadow:0 0 6px #ef4444;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.divider{height:1px;background:var(--border);margin:18px 0}
+.img-preview{max-width:100%;border-radius:12px;margin-top:10px;border:1px solid var(--border);display:none}
+
+/* TERMS CHECKBOX */
+.terms-check-wrap{display:flex;align-items:flex-start;gap:10px;margin:12px 0;padding:12px;background:rgba(91,33,182,0.06);border:1px solid rgba(91,33,182,0.2);border-radius:10px;cursor:pointer}
+.terms-check-wrap input[type="checkbox"]{width:18px;height:18px;accent-color:var(--primary-glow);cursor:pointer;flex-shrink:0;margin-top:2px}
+.terms-check-label{font-size:13px;color:var(--text-muted);line-height:1.5}
+.terms-check-label a{color:var(--primary-glow);text-decoration:underline;cursor:pointer}
+
+/* VIP unlock anim */
+@keyframes vipUnlock{0%{transform:scale(0.5);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+.vip-unlock-anim{animation:vipUnlock 0.6s cubic-bezier(0.34,1.5,0.64,1)}
+
+@keyframes passwordGlow{0%,100%{box-shadow:0 0 0 0 rgba(124,58,237,0)}50%{box-shadow:0 0 24px 6px rgba(124,58,237,0.45)}}
+#deliveredPasswordBox{animation:passwordGlow 2s ease-in-out infinite}
+
+@media(max-width:560px){
+  .nav-tabs{grid-template-columns:repeat(3,1fr)}
+  .plan-grid{grid-template-columns:1fr 1fr}
+  .btn-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">⚡ FIRIMBI</div>
+  <div class="topbar-right">
+    <div class="notif-bell-wrap" onclick="showSection('notifs')" title="Notifications">
+      <span class="bell-icon">🔔</span>
+      <span class="notif-badge hidden" id="topbarNotifBadge">0</span>
+    </div>
+    <div class="topbar-date" id="topbarDate">Loading...</div>
+  </div>
+</div>
+
+<!-- TERMS & CONDITIONS DIALOG -->
+<div class="dialog-overlay" id="termsDialog">
+  <div class="dialog-box" style="max-width:500px;max-height:80vh;overflow-y:auto">
+    <div class="dialog-title">📜 Terms & Conditions</div>
+    <div id="termsContent" style="font-size:14px;color:rgba(255,255,255,0.75);line-height:1.7;max-height:50vh;overflow-y:auto;padding-right:8px;margin-bottom:16px">Loading...</div>
+    <button class="btn btn-glass" onclick="document.getElementById('termsDialog').classList.remove('show')">Close</button>
+  </div>
+</div>
+
+<!-- PRE-LOGIN DIALOG -->
+<div class="dialog-overlay" id="preLoginDialog">
+  <div class="dialog-box" style="text-align:center;max-width:400px">
+    <div id="pdIcon" style="font-size:52px;margin-bottom:12px">🎉</div>
+    <div class="dialog-title" id="pdTitle">Welcome!</div>
+    <div class="dialog-msg" id="pdMsg">Loading...</div>
+    <div style="display:grid;gap:10px;margin-top:22px" id="pdButtons">
+      <button class="btn btn-gold" id="pdOkBtn" onclick="handleDialogOk()">OK</button>
+      <button class="btn btn-glass" id="pdCancelBtn" onclick="closePreLoginDialog()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- AUTH CARD -->
+<div class="card" id="authCard">
+  <div class="card-title"><span class="icon">🔐</span> Welcome to Firimbi</div>
+  <div class="auth-tabs">
+    <button class="auth-tab active" onclick="showAuthTab('login')" id="loginTabBtn">Login</button>
+    <button class="auth-tab" onclick="showAuthTab('register')" id="registerTabBtn">Register</button>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="loginBox">
+    <div class="form-group">
+      <label class="form-label">Phone or Email</label>
+      <input class="form-input" type="text" id="loginIdentifier" placeholder="Enter phone or email">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" id="loginPassword" placeholder="Enter password">
+    </div>
+    <div class="terms-check-wrap" id="loginTermsWrap">
+      <input type="checkbox" id="loginTermsCheck">
+      <label class="terms-check-label" for="loginTermsCheck">I agree to the <a onclick="showTerms()">Terms &amp; Conditions</a> and Privacy Policy</label>
+    </div>
+    <button class="btn btn-primary" id="loginBtn" onclick="loginUser()">🔓 Unlock Account</button>
+    <button class="google-btn" onclick="loginWithGoogle()">
+      <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Sign in with Google
+    </button>
+    <div id="loginMsg"></div>
+  </div>
+
+  <!-- REGISTER -->
+  <div id="registerBox" style="display:none">
+    <div class="form-group">
+      <label class="form-label">Full Name</label>
+      <input class="form-input" type="text" id="regName" placeholder="Enter full name">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" type="email" id="regEmail" placeholder="Enter email">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Phone Number</label>
+      <input class="form-input" type="text" id="regPhone" placeholder="Enter phone number">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" id="regPassword" placeholder="Create password">
+    </div>
+    <div class="terms-check-wrap">
+      <input type="checkbox" id="regTermsCheck">
+      <label class="terms-check-label" for="regTermsCheck">I agree to the <a onclick="showTerms()">Terms &amp; Conditions</a> and Privacy Policy. I must accept to create an account.</label>
+    </div>
+    <button class="btn btn-green" id="registerBtn" onclick="registerUser()">📝 Create Account</button>
+    <button class="google-btn" onclick="loginWithGoogle()">
+      <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Sign up with Google
+    </button>
+    <div id="registerMsg"></div>
+  </div>
+</div>
+
+<!-- USER PANEL -->
+<div id="userPanel" style="display:none">
+
+  <div class="card" id="dashCard">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
+      <div>
+        <div class="card-title" style="margin-bottom:4px"><span class="icon">👋</span> <span id="dashName">Welcome</span></div>
+        <div style="font-size:13px;color:var(--text-muted)" id="dashStatus">Free User</div>
+      </div>
+      <button class="btn btn-red btn-sm" onclick="logoutUser()">Logout</button>
+    </div>
+
+    <div class="coins-display" style="margin-top:16px">
+      <div class="coins-icon">🪙</div>
+      <div class="coins-info" style="flex:1">
+        <h3><span id="coinsCount">0</span> Coins</h3>
+        <p>10 coins = 24hr VIP access</p>
+        <div class="coins-bar" style="margin-top:6px">
+          <div class="coins-fill" id="coinsFill" style="width:0%"></div>
+        </div>
+      </div>
+      <button class="btn btn-gold btn-sm" id="checkinBtn" onclick="doCheckin()">✅ Check In</button>
+    </div>
+
+    <div id="vipStatusBar" class="vip-status-bar" style="display:none">
+      <div class="vip-bar-label">
+        <span><span class="status-dot dot-green" id="vipDot"></span><span id="vipBarLabel">VIP Active</span></span>
+        <span id="vipPct" style="font-family:'Share Tech Mono',monospace;font-size:13px">100%</span>
+      </div>
+      <div class="vip-progress-track">
+        <div class="vip-progress-fill" id="vipProgressFill" style="width:100%;background:linear-gradient(90deg,#059669,#10b981)"></div>
+      </div>
+      <div class="vip-timer-text" id="vipTimerText">--:--:--</div>
+    </div>
+
+    <div class="nav-tabs" style="margin-top:16px">
+      <button class="nav-tab active" onclick="showSection('tips')" id="navTips"><span class="nav-icon">⚽</span>Tips</button>
+      <button class="nav-tab" onclick="showSection('vip')" id="navVip"><span class="nav-icon">💎</span>VIP</button>
+      <button class="nav-tab" onclick="showSection('notifs')" id="navNotifs" style="position:relative"><span class="nav-icon">🔔</span>News<span class="nav-tab-badge hidden" id="navNotifBadge">0</span></button>
+      <button class="nav-tab" onclick="showSection('pay')" id="navPay"><span class="nav-icon">💳</span>Pay</button>
+      <button class="nav-tab" onclick="showSection('board')" id="navBoard"><span class="nav-icon">🏆</span>Board</button>
+      <button class="nav-tab" onclick="showSection('profile')" id="navProfile"><span class="nav-icon">👤</span>Me</button>
+    </div>
+  </div>
+
+  <!-- TIPS SECTION -->
+  <div class="section active" id="tipsSection">
+    <div class="card">
+      <div class="card-title"><span class="icon">⚽</span> Free Tips <span style="font-size:13px;color:var(--text-muted);font-weight:400" id="freeTipsCount"></span></div>
+      <div id="freeTipsList"><div class="empty-state"><span class="icon">⏳</span>Loading tips...</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="icon">💎</span> VIP Predictions</div>
+      <div id="vipLockBox" class="lock-box">
+        <div class="lock-title">Premium Access Required</div>
+        <div class="lock-sub">VIP tips are encrypted.<br>Enter your VIP password or use coins to unlock.</div>
+        <div class="form-group" style="text-align:left">
+          <label class="form-label">VIP Password</label>
+          <input class="form-input" type="text" id="vipPassword" placeholder="Enter 16-digit VIP password" style="text-align:center;letter-spacing:2px">
+        </div>
+        <button class="btn btn-gold" id="activateVipBtn" onclick="activateVIP()">🔓 Unlock VIP Now</button>
+        <div id="vipMsg"></div>
+        <div class="divider"></div>
+        <button class="btn btn-glass" onclick="useCoinsVip()" id="coinsVipBtn">🪙 Use 10 Coins for 24hr VIP</button>
+      </div>
+      <div id="vipTipsList" style="display:none"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="icon">📊</span> Tips History</div>
+      <div id="historyList"><div class="empty-state"><span class="icon">📂</span>No history yet</div></div>
+    </div>
+  </div>
+
+  <!-- VIP SECTION -->
+  <div class="section" id="vipSection">
+    <div class="card">
+      <div class="card-title"><span class="icon">💎</span> VIP Activation</div>
+      <p style="color:var(--text-muted);font-size:14px;line-height:1.7;margin-bottom:20px">
+        Choose a plan, make payment, then submit your proof below. Once approved you'll receive a VIP password in your notifications.
+      </p>
+      <div class="plan-grid">
+        <div class="plan-card" onclick="selectPlan('daily',this)" id="planDaily">
+          <div class="plan-name">Daily</div>
+          <div class="plan-price" id="planDailyPrice">5,000</div>
+          <div class="plan-currency">UGX</div>
+        </div>
+        <div class="plan-card" onclick="selectPlan('weekly',this)" id="planWeekly">
+          <div class="plan-name">Weekly</div>
+          <div class="plan-price" id="planWeeklyPrice">20,000</div>
+          <div class="plan-currency">UGX</div>
+        </div>
+        <div class="plan-card" onclick="selectPlan('monthly',this)" id="planMonthly">
+          <div class="plan-name">Monthly</div>
+          <div class="plan-price" id="planMonthlyPrice">50,000</div>
+          <div class="plan-currency">UGX</div>
+        </div>
+        <div class="plan-card yearly" onclick="selectPlan('yearly',this)" id="planYearly">
+          <div class="plan-name">⭐ Yearly</div>
+          <div class="plan-price" id="planYearlyPrice">200,000</div>
+          <div class="plan-currency">UGX — Best Value</div>
+        </div>
+      </div>
+
+      <!-- PAY BUTTON & USSD FLOW -->
+      <div id="payAmountBox" style="display:none">
+        <div class="pay-amount-box">
+          <div class="pay-amount-label">Amount to Pay</div>
+          <div class="pay-amount-num" id="payAmountNum">–</div>
+          <div class="pay-amount-currency">UGX</div>
+          <div class="pay-divider"></div>
+          <div class="pay-merchant-info">Send to Merchant ID: <strong id="payMerchantId" style="color:#f87171">6891527</strong></div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:6px" id="paySelectedPlanLabel">Plan: –</div>
+        </div>
+        <button class="ussd-btn" onclick="triggerUSSD()">📲 PAY via Airtel Money (*185*9#)</button>
+        <div style="text-align:center;margin-top:10px;font-size:12px;color:var(--text-muted)">or</div>
+        <button class="btn btn-glass" style="margin-top:10px" onclick="selectOtherPlan()">🔄 Choose Other Plan</button>
+      </div>
+
+      <div class="form-group" style="margin-top:20px">
+        <label class="form-label">VIP Password (if you already have one)</label>
+        <input class="form-input" type="text" id="vipPassword2" placeholder="Enter VIP password">
+      </div>
+      <button class="btn btn-gold" onclick="activateVIPFromSecondBox()">⚡ Activate VIP Access</button>
+      <div id="vipMsg2"></div>
+
+      <div class="proof-section">
+        <h3>📤 Send Payment Proof</h3>
+        <div class="form-group">
+          <label class="form-label">Your Phone Number</label>
+          <input class="form-input" type="text" id="proofPhone" placeholder="e.g 0771234567">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Your Full Name</label>
+          <input class="form-input" type="text" id="proofName" placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Transaction ID (TID)</label>
+          <input class="form-input" type="text" id="proofTid" placeholder="Enter TID from your receipt">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Selected Plan</label>
+          <input class="form-input" type="text" id="proofPlan" placeholder="Select a plan above first" readonly>
+        </div>
+        <button class="btn btn-green" id="sendProofBtn" onclick="sendPaymentProof()">📨 Submit Payment Proof</button>
+        <div id="proofMsg"></div>
+      </div>
+
+      <!-- QUICK PAY BUTTON -->
+      <button class="quick-pay-btn" onclick="triggerQuickPay()">
+        <span style="font-size:20px">⚡</span> QUICK PAY
+        <span style="font-size:12px;opacity:0.8;font-weight:500">Instant Payment</span>
+      </button>
+
+      <div class="airtel-promo">
+        <div class="airtel-logo">📱</div>
+        <div class="airtel-info">
+          <h4>Airtel Money</h4>
+          <p>Merchant ID: <strong style="color:#f87171" id="merchantIdDisplay">6891527</strong></p>
+        </div>
+      </div>
+      <button class="airtel-btn" onclick="payAirtel()">💳 Pay with Airtel Money</button>
+
+      <div id="paymentStatusBox" style="margin-top:16px;display:none">
+        <div class="notif-card private" style="text-align:center;padding:20px">
+          <div style="font-size:28px;margin-bottom:8px">⏳</div>
+          <div style="font-weight:700;color:var(--gold);margin-bottom:6px">Payment Pending</div>
+          <div style="font-size:13px;color:var(--text-muted)">Your proof has been received. Awaiting admin approval.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICATIONS SECTION -->
+  <div class="section" id="notifsSection">
+    <div class="card">
+      <div class="card-title"><span class="icon">🔔</span> Notifications & Updates
+        <span id="unreadNotifCount" style="font-size:13px;font-weight:400;color:var(--text-muted)"></span>
+      </div>
+      <button class="btn btn-glass btn-sm" style="margin-bottom:12px;width:auto" onclick="markAllNotifsRead()">✅ Mark All Read</button>
+      <div id="notificationsList"><div class="empty-state"><span class="icon">📭</span>No notifications yet</div></div>
+    </div>
+  </div>
+
+  <!-- PAY SECTION -->
+  <div class="section" id="paySection">
+    <div class="card">
+      <div class="card-title"><span class="icon">💳</span> Payment Methods</div>
+      <div id="paymentsBox"><div class="empty-state"><span class="icon">⏳</span>Loading...</div></div>
+    </div>
+  </div>
+
+  <!-- LEADERBOARD SECTION -->
+  <div class="section" id="boardSection">
+    <div class="card">
+      <div class="card-title"><span class="icon">🏆</span> Top 10 Leaders</div>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6">Top app users ranked by wins, check-ins and activity. VIP users can access monthly rankings.</p>
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+        <button class="btn btn-sm" id="lbWeekBtn" onclick="loadLeaderboard('weekly')" style="width:auto;background:linear-gradient(135deg,rgba(91,33,182,0.6),rgba(124,58,237,0.4));color:#fff;border:1px solid rgba(91,33,182,0.4)">📅 Weekly</button>
+        <button class="btn btn-glass btn-sm" id="lbMonthBtn" onclick="loadLeaderboard('monthly')" style="width:auto">📆 Monthly <span id="lbMonthLock">🔒</span></button>
+      </div>
+      <div id="leaderboardList"><div class="empty-state"><span class="icon">⏳</span>Loading...</div></div>
+    </div>
+
+    <!-- MONTHLY WIN RATE GRAPH -->
+    <div class="card">
+      <div class="card-title"><span class="icon">📈</span> Monthly Win Rate</div>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Win rate progress across the month. Updates automatically as tips are flagged.</p>
+      <div class="win-graph-wrap">
+        <canvas id="winRateCanvas"></canvas>
+      </div>
+      <div class="win-graph-legend">
+        <span><div class="dot" style="background:#10b981"></div> Win Rate %</span>
+        <span><div class="dot" style="background:#7c3aed"></div> Tips Count</span>
+      </div>
+      <div id="winRateStats" style="display:flex;gap:16px;flex-wrap:wrap;margin-top:14px"></div>
+    </div>
+  </div>
+
+  <!-- PROFILE SECTION -->
+  <div class="section" id="profileSection">
+    <div class="card">
+      <div class="card-title"><span class="icon">👤</span> My Profile</div>
+      <div style="text-align:center">
+        <div class="profile-avatar" style="margin:0 auto 16px" id="profileAvatarEmoji">👤</div>
+        <div class="profile-name" id="profileName">Loading...</div>
+        <div class="profile-detail" id="profileEmail">...</div>
+        <div class="profile-detail" id="profilePhone">...</div>
+        <div style="margin-top:12px" id="profileBadgeWrap">
+          <span class="badge badge-free" id="profileBadge">FREE USER</span>
+        </div>
+        <div style="margin-top:10px;font-size:13px;color:var(--text-muted)" id="profileVipExpiry"></div>
+      </div>
+      <div class="divider"></div>
+      <div style="margin-bottom:8px">
+        <div style="font-size:14px;font-weight:700;margin-bottom:10px">📅 Weekly Check-in Progress</div>
+        <div class="checkin-grid" id="checkinGrid"></div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:8px;text-align:center">+2 coins per daily check-in • 10 coins = 24hr VIP</div>
+      </div>
+      <div class="divider"></div>
+      <button class="btn btn-red" onclick="logoutUser()" style="margin-top:8px">🚪 Logout</button>
+    </div>
+  </div>
+
+</div><!-- end userPanel -->
+</div><!-- container -->
+
+<!-- PENDING OVERLAY -->
+<div class="pending-overlay" id="pendingOverlay">
+  <div class="pending-box">
+    <div style="position:relative;width:90px;height:90px;margin:0 auto 20px">
+      <svg width="90" height="90" style="transform:rotate(-90deg)">
+        <circle cx="45" cy="45" r="38" fill="none" stroke="rgba(91,33,182,0.2)" stroke-width="6"/>
+        <circle id="pendingRing" cx="45" cy="45" r="38" fill="none" stroke="#7c3aed" stroke-width="6" stroke-dasharray="239" stroke-dashoffset="0" stroke-linecap="round" style="transition:stroke-dashoffset 1s linear,stroke 1s"/>
+      </svg>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:22px;font-weight:700;color:#fff" id="pendingCountNum">60</div>
+    </div>
+    <div class="pending-title" id="pendingTitle">Payment Approved! 🎉</div>
+    <div class="pending-sub" id="pendingSub">Activating your VIP access...</div>
+    <div style="margin-top:10px;font-size:12px;color:var(--text-muted)" id="pendingTimer">VIP unlocking in 60s</div>
+  </div>
+</div>
+
+<!-- PASSWORD DELIVERY POPUP -->
+<div class="dialog-overlay" id="passwordDeliveryDialog">
+  <div class="dialog-box" style="text-align:center;max-width:400px">
+    <div style="font-size:52px;margin-bottom:8px">🔑</div>
+    <div class="dialog-title" style="color:var(--gold)">Your VIP Password!</div>
+    <div class="dialog-msg" style="margin-bottom:14px">Your password has arrived. Copy it or unlock VIP immediately.</div>
+    <div id="deliveredPasswordBox" style="background:rgba(91,33,182,0.18);border:2px solid rgba(124,58,237,0.5);border-radius:14px;padding:16px 12px;font-family:'Share Tech Mono',monospace;font-size:20px;font-weight:700;color:#f5c51c;letter-spacing:3px;word-break:break-all;margin-bottom:8px;cursor:pointer;position:relative" onclick="copyDeliveredPassword()" title="Tap to copy">
+      <span id="deliveredPasswordText">––––––––</span>
+      <div style="font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1px;margin-top:6px;font-family:'Exo 2',sans-serif">TAP TO COPY</div>
+    </div>
+    <div id="deliveryCopyMsg" style="font-size:12px;color:#4ade80;height:18px;margin-bottom:10px"></div>
+    <div style="display:grid;gap:10px">
+      <button class="btn btn-gold" onclick="unlockWithDeliveredPassword()">⚡ Unlock VIP Now</button>
+      <button class="btn btn-glass" onclick="copyDeliveredPassword()">📋 Copy Password</button>
+      <button class="btn btn-glass" style="font-size:12px;padding:10px" onclick="dismissPasswordDelivery()">Dismiss</button>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATION DIALOG -->
+<div class="dialog-overlay" id="adminDialog">
+  <div class="dialog-box">
+    <div class="dialog-title" id="adminDialogTitle">Notification</div>
+    <div class="dialog-msg" id="adminDialogMessage">You have a new update.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px">
+      <button class="btn btn-green" onclick="closeAdminDialog()">OK</button>
+      <button class="btn btn-glass" onclick="closeAdminDialog()">Dismiss</button>
+    </div>
+  </div>
+</div>
+
+<!-- VIP EXPIRED DIALOG -->
+<div class="dialog-overlay" id="vipExpiredDialog">
+  <div class="dialog-box" style="text-align:center">
+    <div style="font-size:48px;margin-bottom:12px">🔒</div>
+    <div class="dialog-title" style="color:var(--danger)">VIP Access Expired</div>
+    <div class="dialog-msg">Your VIP session has ended. Renew to continue accessing premium tips.</div>
+    <button class="btn btn-gold" style="margin-top:20px" onclick="closeVipExpiredDialog();showSection('vip')">Renew VIP Access</button>
+  </div>
+</div>
+
+<audio id="warnSound" loop><source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg"></audio>
+<audio id="successSound" preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" type="audio/mpeg"></audio>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore,collection,addDoc,getDocs,getDoc,setDoc,
+  doc,updateDoc,deleteDoc,serverTimestamp,query,orderBy,
+  where,onSnapshot,Timestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,
+  signInWithPopup,GoogleAuthProvider,onAuthStateChanged,signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyA8P_0VQCoaudkYQXImSz9jV6JxrH1hCcc",
+  authDomain:"footy-tips-3a2bb.firebaseapp.com",
+  databaseURL:"https://footy-tips-3a2bb-default-rtdb.firebaseio.com",
+  projectId:"footy-tips-3a2bb",
+  storageBucket:"footy-tips-3a2bb.firebasestorage.app",
+  messagingSenderId:"950697560556",
+  appId:"1:950697560556:web:12044246f1359406a9d8c9",
+  measurementId:"G-1QW389D1W0"
+};
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+const auth=getAuth(app);
+const gProvider=new GoogleAuthProvider();
+
+let currentUser=null,currentUserData=null,allTips=[],vipTimerInterval=null,_selectedPlan="",_dialogOkLink="";
+let _deliveredPassword="",unreadNotifIds=new Set(),_ussdCode="*185*9#",_merchantId="6891527";
+let winRateData=[],leaderboardUnsub=null;
+
+// ── UTILS ──
+function esc(t=""){ return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") }
+function getSafeDate(v){ if(!v)return null; if(v?.toDate)return v.toDate(); const d=new Date(v); return isNaN(d)?null:d }
+function getUid(){ return currentUser?.uid||null }
+function setBtn(id,loading,lt,nt){ const b=document.getElementById(id); if(!b)return; b.disabled=loading; b.textContent=loading?lt:nt }
+function playSound(id){ try{ const a=document.getElementById(id); if(a){a.currentTime=0;a.play().catch(()=>{})} }catch(e){} }
+
+// date/time display
+function updateTopbarDate(){
+  const now=new Date();
+  document.getElementById("topbarDate").textContent=now.toLocaleDateString("en-UG",{weekday:"short",month:"short",day:"numeric"})+" "+now.toLocaleTimeString("en-UG",{hour:"2-digit",minute:"2-digit"});
+}
+updateTopbarDate();
+setInterval(updateTopbarDate,30000);
+
+// ── AUTH TABS ──
+window.showAuthTab=function(tab){
+  document.getElementById("loginBox").style.display=tab==="login"?"block":"none";
+  document.getElementById("registerBox").style.display=tab==="register"?"block":"none";
+  document.getElementById("loginTabBtn").className="auth-tab"+(tab==="login"?" active":"");
+  document.getElementById("registerTabBtn").className="auth-tab"+(tab==="register"?" active":"");
+};
+
+// ── SECTIONS ──
+window.showSection=function(sec){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".nav-tab").forEach(b=>b.classList.remove("active"));
+  const sectionEl=document.getElementById(sec+"Section");
+  const navEl=document.getElementById("nav"+sec.charAt(0).toUpperCase()+sec.slice(1));
+  if(sectionEl) sectionEl.classList.add("active");
+  if(navEl) navEl.classList.add("active");
+  if(sec==="notifs"){ loadNotifications(); markAllNotifsRead(); }
+  if(sec==="board"){ loadLeaderboard("weekly"); loadWinRateGraph(); }
+  if(sec==="pay") renderPaySection();
+};
+
+// ── TERMS ──
+window.showTerms=async function(){
+  document.getElementById("termsDialog").classList.add("show");
+  try{
+    const snap=await getDoc(doc(db,"settings","terms"));
+    const content=snap.exists()?snap.data().content:"By using Firimbi, you agree to use the service responsibly. Tips are for informational purposes only. We do not guarantee any outcomes. All payments are final unless disputed within 24 hours. The admin reserves the right to revoke access for abuse.";
+    document.getElementById("termsContent").innerHTML=content.replace(/\n/g,"<br>");
+  }catch(e){ document.getElementById("termsContent").textContent="Unable to load terms." }
+};
+
+// ── REGISTER ──
+window.registerUser=async function(){
+  const termsCheck=document.getElementById("regTermsCheck");
+  if(!termsCheck.checked){ showMsg("registerMsg","error","❌ You must accept Terms & Conditions to register"); return }
+  const name=document.getElementById("regName").value.trim();
+  const email=document.getElementById("regEmail").value.trim();
+  const phone=document.getElementById("regPhone").value.trim();
+  const password=document.getElementById("regPassword").value.trim();
+  if(!name||!email||!phone||!password){ showMsg("registerMsg","error","❌ Fill all fields"); return }
+  setBtn("registerBtn",true,"Creating...","📝 Create Account");
+  try{
+    const cred=await createUserWithEmailAndPassword(auth,email,password);
+    await setDoc(doc(db,"users",cred.user.uid),{
+      name,email,phone,password,isVIP:false,plan:"FREE",
+      coins:0,role:"user",createdAt:serverTimestamp(),updatedAt:serverTimestamp(),
+      termsAccepted:true,termsAcceptedAt:serverTimestamp()
+    });
+    showMsg("registerMsg","success","✅ Account created!");
+  }catch(e){ showMsg("registerMsg","error","❌ "+esc(e.message)) }
+  finally{ setBtn("registerBtn",false,"Creating...","📝 Create Account") }
+};
+
+// ── LOGIN ──
+window.loginUser=async function(){
+  const loginTermsCheck=document.getElementById("loginTermsCheck");
+  if(!loginTermsCheck.checked){ showMsg("loginMsg","error","❌ Please accept Terms & Conditions"); return }
+  const identifier=document.getElementById("loginIdentifier").value.trim();
+  const password=document.getElementById("loginPassword").value;
+  if(!identifier||!password){ showMsg("loginMsg","error","❌ Fill all fields"); return }
+  setBtn("loginBtn",true,"Logging in...","🔓 Unlock Account");
+  try{
+    let emailToUse=identifier;
+    if(!identifier.includes("@")){
+      const q=query(collection(db,"users"),where("phone","==",identifier));
+      const snap=await getDocs(q);
+      if(!snap.empty) emailToUse=snap.docs[0].data().email||identifier;
+    }
+    await signInWithEmailAndPassword(auth,emailToUse,password);
+  }catch(e){ showMsg("loginMsg","error","❌ "+esc(e.message)) }
+  finally{ setBtn("loginBtn",false,"Logging in...","🔓 Unlock Account") }
+};
+
+// ── GOOGLE LOGIN ──
+window.loginWithGoogle=async function(){
+  try{ await signInWithPopup(auth,gProvider) }catch(e){ showMsg("loginMsg","error","❌ "+esc(e.message)) }
+};
+
+// ── LOGOUT ──
+window.logoutUser=async function(){
+  try{ await signOut(auth); }catch(e){}
+  currentUser=null; currentUserData=null;
+  document.getElementById("authCard").style.display="block";
+  document.getElementById("userPanel").style.display="none";
+  if(vipTimerInterval){ clearInterval(vipTimerInterval); vipTimerInterval=null }
+};
+
+// ── AUTH STATE ──
+function checkLoggedIn(){
+  onAuthStateChanged(auth,async user=>{
+    if(user){
+      currentUser=user;
+      document.getElementById("authCard").style.display="none";
+      document.getElementById("userPanel").style.display="block";
+      await loadCurrentUser();
+      await loadTips();
+      await loadSettings();
+      await loadNotifications();
+      renderVipState();
+      renderCheckinGrid();
+      requestNotifPermission();
+      checkBroadcast();
+      startNotifListener();
+    }
+  });
+}
+
+// ── LOAD CURRENT USER ──
+async function loadCurrentUser(){
+  const uid=getUid(); if(!uid) return;
+  try{
+    const snap=await getDoc(doc(db,"users",uid));
+    if(snap.exists()){
+      currentUserData={id:uid,...snap.data()};
+      document.getElementById("dashName").textContent=currentUserData.name||"User";
+      document.getElementById("profileName").textContent=currentUserData.name||"User";
+      document.getElementById("profileEmail").textContent=currentUserData.email||"";
+      document.getElementById("profilePhone").textContent=currentUserData.phone||"";
+      const coins=currentUserData.coins||0;
+      document.getElementById("coinsCount").textContent=coins;
+      document.getElementById("coinsFill").style.width=Math.min(coins/50*100,100)+"%";
+      const isVip=isUserVip(currentUserData);
+      document.getElementById("dashStatus").textContent=isVip?"💎 VIP Member":"Free User";
+      document.getElementById("profileBadge").className="badge "+(isVip?"badge-vip":"badge-free");
+      document.getElementById("profileBadge").textContent=isVip?"💎 VIP":"FREE USER";
+      const profileAvatar=document.getElementById("profileAvatarEmoji");
+      profileAvatar.textContent=isVip?"💎":"👤";
+      if(currentUserData.vipExpiry){
+        const exp=getSafeDate(currentUserData.vipExpiry);
+        document.getElementById("profileVipExpiry").textContent=exp?"VIP Expires: "+exp.toLocaleString():"";
+      }
+      checkVipExpiry(currentUserData);
+    }
+  }catch(e){}
+}
+
+function isUserVip(u){
+  const e=getSafeDate(u.vipExpiry);
+  return u.isVIP===true||u.plan==="VIP"||(e&&e>new Date());
+}
+
+// ── VIP STATE & TIMER ──
+function renderVipState(){
+  const u=currentUserData||{};
+  const isVip=isUserVip(u);
+  document.getElementById("vipStatusBar").style.display=isVip?"block":"none";
+  if(!isVip){ if(vipTimerInterval){clearInterval(vipTimerInterval);vipTimerInterval=null} return }
+  if(vipTimerInterval) clearInterval(vipTimerInterval);
+  function tick(){
+    const exp=getSafeDate(u.vipExpiry);
+    if(!exp||u.vipExpiry===null){ document.getElementById("vipTimerText").textContent="♾️ Never Expires"; document.getElementById("vipProgressFill").style.width="100%"; document.getElementById("vipPct").textContent="∞"; return }
+    const now=Date.now(), expMs=exp.getTime();
+    const activated=getSafeDate(u.vipActivatedAt);
+    const totalMs=activated?(expMs-activated.getTime()):86400000;
+    const remMs=Math.max(0,expMs-now);
+    const pct=Math.min(100,(remMs/totalMs)*100);
+    const hh=Math.floor(remMs/3600000);
+    const mm=Math.floor((remMs%3600000)/60000);
+    const ss=Math.floor((remMs%60000)/1000);
+    document.getElementById("vipTimerText").textContent=String(hh).padStart(2,"0")+":"+String(mm).padStart(2,"0")+":"+String(ss).padStart(2,"0");
+    document.getElementById("vipProgressFill").style.width=pct+"%";
+    document.getElementById("vipPct").textContent=Math.round(pct)+"%";
+    const bar=document.getElementById("vipStatusBar");
+    const dotEl=document.getElementById("vipDot");
+    if(pct<20){ bar.classList.add("danger"); document.getElementById("vipProgressFill").style.background="linear-gradient(90deg,#b91c1c,#ef4444)"; dotEl.className="status-dot dot-red"; }
+    else if(pct<50){ bar.classList.remove("danger"); document.getElementById("vipProgressFill").style.background="linear-gradient(90deg,#d97706,#f59e0b)"; dotEl.className="status-dot dot-gold"; }
+    else { bar.classList.remove("danger"); document.getElementById("vipProgressFill").style.background="linear-gradient(90deg,#059669,#10b981)"; dotEl.className="status-dot dot-green"; }
+    if(remMs<=0){ clearInterval(vipTimerInterval); document.getElementById("vipExpiredDialog").classList.add("show"); }
+  }
+  tick();
+  vipTimerInterval=setInterval(tick,1000);
+}
+
+function checkVipExpiry(u){
+  const exp=getSafeDate(u.vipExpiry);
+  if(u.isVIP&&exp&&exp<new Date()){ document.getElementById("vipExpiredDialog").classList.add("show"); }
+}
+
+// ── LOAD TIPS ──
+async function loadTips(){
+  try{
+    const snap=await getDocs(query(collection(db,"tips"),orderBy("createdAt","desc")));
+    allTips=[];
+    snap.forEach(d=>{ const t={id:d.id,...d.data()}; if(!t.inHistory) allTips.push(t) });
+    renderTips();
+    loadHistory();
+  }catch(e){}
+}
+
+function renderTips(){
+  const u=currentUserData||{};
+  const isVip=isUserVip(u);
+  const freeTips=allTips.filter(t=>t.type==="free").slice(0,7);
+  const vipTips=allTips.filter(t=>t.type==="vip");
+  const freeEl=document.getElementById("freeTipsList");
+  const countEl=document.getElementById("freeTipsCount");
+  countEl.textContent=freeTips.length?`(${freeTips.length})`:"";
+  if(!freeTips.length){ freeEl.innerHTML=`<div class="empty-state"><span class="icon">📭</span>No tips posted today yet</div>`; }
+  else{ freeEl.innerHTML=freeTips.map(renderTipCard).join(""); }
+  if(isVip){
+    document.getElementById("vipLockBox").style.display="none";
+    document.getElementById("vipTipsList").style.display="block";
+    if(!vipTips.length) document.getElementById("vipTipsList").innerHTML=`<div class="empty-state"><span class="icon">📭</span>No VIP tips today</div>`;
+    else document.getElementById("vipTipsList").innerHTML=vipTips.map(t=>renderTipCard(t,true)).join("");
+  } else {
+    document.getElementById("vipLockBox").style.display="block";
+    document.getElementById("vipTipsList").style.display="none";
+  }
+}
+
+function renderTipCard(t, isVipCard=false){
+  const confClass=t.confidence==="HIGH"?"badge-high":t.confidence==="MEDIUM"?"badge-medium":"badge-low";
+  return `<div class="tip-card ${isVipCard?"vip-tip":""}">
+    <div class="tip-league">${esc(t.league||"")}</div>
+    <div class="tip-match">${esc(t.title||"")}</div>
+    <div class="tip-pick">Pick: ${esc(t.pick||"")}</div>
+    ${t.desc?`<div class="tip-desc">${esc(t.desc)}</div>`:""}
+    <div class="tip-meta">
+      <span class="badge ${isVipCard?"badge-vip":"badge-free"}">${isVipCard?"💎 VIP":"⚽ FREE"}</span>
+      ${t.confidence?`<span class="badge ${confClass}">${t.confidence}</span>`:""}
+      ${t.aiGenerated?`<span class="badge" style="background:rgba(124,58,237,0.15);color:#a78bfa;border:1px solid rgba(124,58,237,0.3)">🤖 AI</span>`:""}
+    </div>
+  </div>`;
+}
+
+// ── HISTORY ──
+async function loadHistory(){
+  try{
+    const snap=await getDocs(query(collection(db,"tips"),orderBy("createdAt","desc")));
+    const history=[];
+    snap.forEach(d=>{ const t={id:d.id,...d.data()}; if(t.inHistory) history.push(t) });
+    const el=document.getElementById("historyList");
+    if(!history.length){ el.innerHTML=`<div class="empty-state"><span class="icon">📂</span>No history yet</div>`; return }
+    const freeTips=history.filter(t=>t.type!=="vip");
+    const vipTips=history.filter(t=>t.type==="vip");
+    let html="";
+    if(vipTips.length){ html+=`<div class="history-cat-header">💎 VIP Tips History</div>`; html+=vipTips.map(renderHistCard).join(""); }
+    if(freeTips.length){ html+=`<div class="history-cat-header">⚽ Free Tips History</div>`; html+=freeTips.map(renderHistCard).join(""); }
+    el.innerHTML=html;
+    buildWinRateData(history);
+  }catch(e){}
+}
+
+function renderHistCard(t){
+  const r=t.result||"pending";
+  return `<div class="history-card ${r==="won"?"won":r==="lost"?"lost":""}">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+      <div>
+        <div style="font-size:15px;font-weight:700">${esc(t.title||"")}</div>
+        <div style="font-size:12px;color:var(--text-muted);font-family:'Share Tech Mono',monospace">${esc(t.league||"")} · Pick: ${esc(t.pick||"")}</div>
+        ${t.finalScore?`<div style="font-size:13px;margin-top:4px">Score: <strong style="color:var(--accent)">${esc(t.finalScore)}</strong></div>`:""}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+        <span class="badge badge-${r==="won"?"won":r==="lost"?"lost":"pending"}">${r.toUpperCase()}</span>
+        <span class="badge ${t.type==="vip"?"badge-vip":"badge-free"}">${t.type==="vip"?"💎 VIP":"⚽ FREE"}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── WIN RATE DATA ──
+function buildWinRateData(history){
+  const now=new Date();
+  const daysInMonth=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+  const dailyData={};
+  for(let d=1;d<=daysInMonth;d++) dailyData[d]={wins:0,total:0};
+  history.forEach(t=>{
+    const d=getSafeDate(t.createdAt);
+    if(!d||d.getMonth()!==now.getMonth()||d.getFullYear()!==now.getFullYear()) return;
+    const day=d.getDate();
+    if(!dailyData[day]) dailyData[day]={wins:0,total:0};
+    dailyData[day].total++;
+    if(t.result==="won") dailyData[day].wins++;
+  });
+  winRateData=Object.keys(dailyData).map(d=>({day:Number(d),...dailyData[d],rate:dailyData[d].total>0?Math.round(dailyData[d].wins/dailyData[d].total*100):null}));
+}
+
+// ── DRAW WIN RATE GRAPH ──
+function loadWinRateGraph(){
+  const canvas=document.getElementById("winRateCanvas");
+  if(!canvas) return;
+  const dpr=window.devicePixelRatio||1;
+  const W=canvas.offsetWidth||300,H=180;
+  canvas.width=W*dpr; canvas.height=H*dpr;
+  canvas.style.width=W+"px"; canvas.style.height=H+"px";
+  const ctx=canvas.getContext("2d");
+  ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,W,H);
+  const now=new Date();
+  const today=now.getDate();
+  const data=winRateData.filter(d=>d.day<=today);
+  if(!data.length){
+    ctx.fillStyle="rgba(255,255,255,0.2)"; ctx.font="14px 'Exo 2'";
+    ctx.textAlign="center"; ctx.fillText("No data yet this month",W/2,H/2);
+    return;
+  }
+  const pad={l:32,r:16,t:16,b:28};
+  const gW=W-pad.l-pad.r, gH=H-pad.t-pad.b;
+  // grid lines
+  ctx.strokeStyle="rgba(255,255,255,0.06)"; ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const y=pad.t+gH*(i/4);
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+gW,y);ctx.stroke();
+    ctx.fillStyle="rgba(255,255,255,0.3)"; ctx.font="10px 'Share Tech Mono'";
+    ctx.textAlign="right"; ctx.fillText((100-i*25)+"%",pad.l-4,y+4);
+  }
+  // x labels (every 5 days)
+  ctx.fillStyle="rgba(255,255,255,0.3)"; ctx.font="10px 'Share Tech Mono'"; ctx.textAlign="center";
+  const xStep=gW/(today-1||1);
+  data.forEach((d,i)=>{ if(d.day%5===0||d.day===1) ctx.fillText(d.day,pad.l+i*xStep,H-pad.b+14) });
+  // win rate line
+  const validData=data.filter(d=>d.rate!==null);
+  if(validData.length>1){
+    ctx.beginPath();
+    const grad=ctx.createLinearGradient(pad.l,0,pad.l+gW,0);
+    grad.addColorStop(0,"#10b981"); grad.addColorStop(1,"#34d399");
+    ctx.strokeStyle=grad; ctx.lineWidth=2.5; ctx.lineJoin="round";
+    validData.forEach((d,i)=>{
+      const x=pad.l+(d.day-1)*xStep;
+      const y=pad.t+gH*(1-d.rate/100);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    // dots
+    validData.forEach(d=>{
+      const x=pad.l+(d.day-1)*xStep;
+      const y=pad.t+gH*(1-d.rate/100);
+      ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2);
+      ctx.fillStyle="#10b981"; ctx.fill();
+    });
+  }
+  // stats summary
+  const totalWins=winRateData.reduce((s,d)=>s+d.wins,0);
+  const totalTips=winRateData.reduce((s,d)=>s+d.total,0);
+  const overall=totalTips>0?Math.round(totalWins/totalTips*100):0;
+  document.getElementById("winRateStats").innerHTML=`
+    <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:10px 14px;text-align:center">
+      <div style="font-size:22px;font-weight:800;font-family:'Rajdhani',sans-serif;color:#10b981">${overall}%</div>
+      <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Win Rate</div>
+    </div>
+    <div style="background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.2);border-radius:10px;padding:10px 14px;text-align:center">
+      <div style="font-size:22px;font-weight:800;font-family:'Rajdhani',sans-serif;color:#7c3aed">${totalWins}/${totalTips}</div>
+      <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Won/Total</div>
+    </div>
+  `;
+}
+
+// ── LEADERBOARD ──
+window.loadLeaderboard=async function(period="weekly"){
+  const u=currentUserData||{};
+  const isVip=isUserVip(u);
+  const lbMonthBtn=document.getElementById("lbMonthBtn");
+  const lbWeekBtn=document.getElementById("lbWeekBtn");
+  if(period==="monthly"){
+    if(!isVip){ showMsg("",""); 
+      document.getElementById("leaderboardList").innerHTML=`<div class="empty-state"><span class="icon">🔒</span>Monthly leaderboard is <strong style="color:var(--gold)">VIP only</strong>. Upgrade to unlock.</div>`;
+      return;
+    }
+    document.getElementById("lbMonthLock").textContent="";
+  }
+  lbWeekBtn.style.opacity=period==="weekly"?"1":"0.5";
+  lbMonthBtn.style.opacity=period==="monthly"?"1":"0.5";
+  try{
+    const now=new Date();
+    let startDate;
+    if(period==="weekly"){ startDate=new Date(now.getTime()-7*86400000); }
+    else { startDate=new Date(now.getFullYear(),now.getMonth(),1); }
+    const usersSnap=await getDocs(collection(db,"users"));
+    const allUsers=[];
+    usersSnap.forEach(d=>allUsers.push({id:d.id,...d.data()}));
+    const histSnap=await getDocs(collection(db,"tips"));
+    const histTips=[];
+    histSnap.forEach(d=>{ const t={id:d.id,...d.data()}; if(t.inHistory&&t.result) histTips.push(t) });
+    const scored=allUsers.map(usr=>{
+      const checkins=(usr.checkinDates||[]).filter(ds=>new Date(ds)>=startDate).length;
+      return { id:usr.id, name:usr.name||"Anonymous", isVip:isUserVip(usr), coins:usr.coins||0, checkins, score:(checkins*5)+(usr.coins||0) };
+    }).sort((a,b)=>b.score-a.score).slice(0,10);
+    const el=document.getElementById("leaderboardList");
+    if(!scored.length){ el.innerHTML=`<div class="empty-state">No data yet</div>`; return }
+    const medals=["🥇","🥈","🥉"];
+    el.innerHTML=scored.map((usr,i)=>`
+      <div class="leaderboard-item">
+        <div class="leaderboard-rank rank-${i+1}">${medals[i]||"#"+(i+1)}</div>
+        <div class="leaderboard-avatar">${usr.isVip?"💎":"👤"}</div>
+        <div class="leaderboard-info">
+          <div class="leaderboard-name">${esc(usr.name)}</div>
+          <div class="leaderboard-stat">🪙 ${usr.coins} coins · 📅 ${usr.checkins} check-ins</div>
+        </div>
+        <div class="leaderboard-score">${usr.score}</div>
+      </div>
+    `).join("");
+  }catch(e){ document.getElementById("leaderboardList").innerHTML=`<div class="empty-state">Unable to load</div>` }
+};
+
+// ── NOTIFICATIONS WITH UNREAD BADGE ──
+let _seenNotifIds=new Set(JSON.parse(localStorage.getItem("firimbi_seen_notifs")||"[]"));
+
+async function loadNotifications(){
+  const uid=getUid(); if(!uid) return;
+  try{
+    const q=query(collection(db,"notifications"),orderBy("createdAt","desc"));
+    const snap=await getDocs(q);
+    const notifs=[];
+    snap.forEach(d=>{
+      const n={id:d.id,...d.data()};
+      if(!n.targetUser||n.targetUser===uid) notifs.push(n);
+    });
+    // Count unread
+    const unreadCount=notifs.filter(n=>!_seenNotifIds.has(n.id)).length;
+    updateNotifBadge(unreadCount);
+    const el=document.getElementById("notificationsList");
+    const countEl=document.getElementById("unreadNotifCount");
+    countEl.textContent=unreadCount>0?`· ${unreadCount} unread`:"";
+    if(!notifs.length){ el.innerHTML=`<div class="empty-state"><span class="icon">📭</span>No notifications yet</div>`; return }
+    el.innerHTML=notifs.map(n=>{
+      const isUnread=!_seenNotifIds.has(n.id);
+      const createdAt=getSafeDate(n.createdAt);
+      const isPrivate=!!n.targetUser;
+      return `<div class="notif-card ${isUnread?"unread":""} ${isPrivate?"private":""}">
+        <div class="notif-title">${esc(n.title||"")}</div>
+        <div class="notif-msg">${esc(n.message||"")}</div>
+        ${n.password?`<div style="margin-top:8px;background:rgba(91,33,182,0.15);border:1px solid rgba(91,33,182,0.3);border-radius:8px;padding:10px;font-family:'Share Tech Mono',monospace;font-size:15px;color:#f5c51c;letter-spacing:2px;cursor:pointer;text-align:center" onclick="copyToClipboard('${esc(n.password||"")}')" title="Tap to copy">${esc(n.password)}</div>`:""}
+        <div class="notif-time">${createdAt?createdAt.toLocaleString():"Just now"}</div>
+      </div>`;
+    }).join("");
+    // Check for password delivery
+    notifs.forEach(n=>{
+      if(n.type==="password_delivery"&&n.password&&n.targetUser===uid){
+        if(!localStorage.getItem("firimbi_pwd_shown_"+n.id)){
+          _deliveredPassword=n.password;
+          document.getElementById("deliveredPasswordText").textContent=n.password;
+          document.getElementById("passwordDeliveryDialog").classList.add("show");
+          localStorage.setItem("firimbi_pwd_shown_"+n.id,"1");
+        }
+      }
+    });
+    // Check for payment approved
+    notifs.forEach(n=>{
+      if(n.type==="payment_approved"&&n.targetUser===uid){
+        if(!localStorage.getItem("firimbi_pending_shown_"+n.id)){
+          localStorage.setItem("firimbi_pending_shown_"+n.id,"1");
+          showPendingOverlay();
+        }
+      }
+    });
+  }catch(e){}
+}
+
+function updateNotifBadge(count){
+  const topBadge=document.getElementById("topbarNotifBadge");
+  const navBadge=document.getElementById("navNotifBadge");
+  if(count>0){
+    topBadge.textContent=count>99?"99+":count;
+    topBadge.classList.remove("hidden");
+    navBadge.textContent=count>99?"99+":count;
+    navBadge.classList.remove("hidden");
+  } else {
+    topBadge.classList.add("hidden");
+    navBadge.classList.add("hidden");
+  }
+}
+
+window.markAllNotifsRead=function(){
+  const uid=getUid(); if(!uid) return;
+  const cards=document.querySelectorAll(".notif-card.unread");
+  cards.forEach(c=>c.classList.remove("unread"));
+  const seenArr=Array.from(document.querySelectorAll(".notif-card")).map(c=>c.dataset.id).filter(Boolean);
+  // Update seen from Firestore IDs — re-fetch and mark all
+  getDocs(query(collection(db,"notifications"),orderBy("createdAt","desc"))).then(snap=>{
+    snap.forEach(d=>{ if(!d.data().targetUser||d.data().targetUser===uid) _seenNotifIds.add(d.id) });
+    localStorage.setItem("firimbi_seen_notifs",JSON.stringify(Array.from(_seenNotifIds)));
+    updateNotifBadge(0);
+    document.getElementById("unreadNotifCount").textContent="";
+  }).catch(()=>{});
+};
+
+function startNotifListener(){
+  const uid=getUid(); if(!uid) return;
+  onSnapshot(query(collection(db,"notifications"),orderBy("createdAt","desc")),(snap)=>{
+    const notifs=[];
+    snap.forEach(d=>{ const n={id:d.id,...d.data()}; if(!n.targetUser||n.targetUser===uid) notifs.push(n) });
+    const unreadCount=notifs.filter(n=>!_seenNotifIds.has(n.id)).length;
+    updateNotifBadge(unreadCount);
+  });
+}
+
+window.copyToClipboard=function(text){ navigator.clipboard.writeText(text).then(()=>{}).catch(()=>{}) };
+
+// ── PLAN SELECTION & PAY FLOW ──
+const PLAN_PRICES={daily:"5,000",weekly:"20,000",monthly:"50,000",yearly:"200,000"};
+window.selectPlan=function(plan,el){
+  _selectedPlan=plan;
+  document.querySelectorAll(".plan-card").forEach(c=>c.classList.remove("selected"));
+  el.classList.add("selected");
+  document.getElementById("proofPlan").value=plan.charAt(0).toUpperCase()+plan.slice(1);
+  // Show amount box
+  const box=document.getElementById("payAmountBox");
+  box.style.display="block";
+  document.getElementById("payAmountNum").textContent=PLAN_PRICES[plan]||"–";
+  document.getElementById("paySelectedPlanLabel").textContent="Plan: "+plan.charAt(0).toUpperCase()+plan.slice(1);
+  document.getElementById("payMerchantId").textContent=_merchantId;
+};
+
+window.selectOtherPlan=function(){
+  document.getElementById("payAmountBox").style.display="none";
+  _selectedPlan="";
+  document.querySelectorAll(".plan-card").forEach(c=>c.classList.remove("selected"));
+};
+
+window.triggerUSSD=function(){
+  const code=_ussdCode.replace(/#/g,"%23");
+  window.location.href="tel:"+code;
+};
+
+window.payAirtel=function(){
+  const code=_ussdCode.replace(/#/g,"%23");
+  window.location.href="tel:"+code;
+};
+
+// ── QUICK PAY ──
+window.triggerQuickPay=async function(){
+  try{
+    const snap=await getDoc(doc(db,"settings","marzipay"));
+    const marzipayEnabled=snap.exists()&&snap.data().enabled===true;
+    if(marzipayEnabled){
+      const url=snap.data().paymentUrl||"";
+      const uid=getUid();
+      const plan=_selectedPlan||"daily";
+      const fullUrl=url+(url.includes("?")?"&":"?")+"user="+encodeURIComponent(uid)+"&plan="+encodeURIComponent(plan);
+      window.open(fullUrl,"_blank");
+    } else {
+      // Fallback to USSD
+      triggerUSSD();
+    }
+  }catch(e){ triggerUSSD(); }
+};
+
+// ── SEND PAYMENT PROOF ──
+window.sendPaymentProof=async function(){
+  const uid=getUid();
+  const phone=document.getElementById("proofPhone").value.trim();
+  const name=document.getElementById("proofName").value.trim();
+  const tid=document.getElementById("proofTid").value.trim();
+  const plan=document.getElementById("proofPlan").value.trim();
+  const msg=document.getElementById("proofMsg");
+  if(!phone||!name||!tid||!plan){ showMsg("proofMsg","error","❌ Fill all required fields"); return }
+  if(!uid){ showMsg("proofMsg","error","❌ Please login first"); return }
+  setBtn("sendProofBtn",true,"Submitting...","📨 Submit Payment Proof");
+  try{
+    await addDoc(collection(db,"paymentProofs"),{
+      userId:uid, userName:name, userPhone:phone, tid, plan:plan.toLowerCase(),
+      status:"pending", createdAt:serverTimestamp(), unread:true
+    });
+    await updateDoc(doc(db,"users",uid),{paymentStatus:"pending",updatedAt:serverTimestamp()});
+    showMsg("proofMsg","success","✅ Proof submitted! Waiting for admin approval.");
+    document.getElementById("paymentStatusBox").style.display="block";
+    playSound("successSound");
+    ["proofPhone","proofName","proofTid"].forEach(id=>document.getElementById(id).value="");
+  }catch(e){ showMsg("proofMsg","error","❌ "+esc(e.message)) }
+  finally{ setBtn("sendProofBtn",false,"Submitting...","📨 Submit Payment Proof") }
+};
+
+// ── LOAD SETTINGS (USSD CODE, MERCHANT ID) ──
+async function loadSettings(){
+  try{
+    const snap=await getDoc(doc(db,"settings","main"));
+    if(snap.exists()){
+      const s=snap.data();
+      if(s.ussdCode) _ussdCode=s.ussdCode;
+      if(s.airtel){ _merchantId=s.airtel; document.getElementById("merchantIdDisplay").textContent=s.airtel; document.getElementById("payMerchantId").textContent=s.airtel; }
+      renderPaySection(s);
+    }
+  }catch(e){}
+}
+
+function renderPaySection(s){
+  const el=document.getElementById("paymentsBox");
+  if(!el) return;
+  if(!s){ loadSettings(); return; }
+  let html="";
+  if(s.mtn) html+=`<div style="background:rgba(245,197,28,0.06);border:1px solid rgba(245,197,28,0.2);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px"><span style="font-size:28px">📱</span><div><div style="font-size:14px;font-weight:700;color:#f5c51c">MTN Mobile Money</div><div style="font-size:12px;color:var(--text-muted)">Number: <strong>${esc(s.mtn)}</strong></div></div></div>`;
+  if(s.airtel) html+=`<div style="background:rgba(220,38,38,0.06);border:1px solid rgba(220,38,38,0.2);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px"><span style="font-size:28px">📱</span><div><div style="font-size:14px;font-weight:700;color:#f87171">Airtel Money</div><div style="font-size:12px;color:var(--text-muted)">Merchant: <strong>${esc(s.airtel)}</strong></div></div></div>`;
+  if(s.whatsapp) html+=`<a href="${esc(s.whatsapp)}" target="_blank" style="display:flex;align-items:center;gap:10px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.2);border-radius:14px;padding:14px 16px;margin-bottom:10px;text-decoration:none;color:inherit"><span style="font-size:24px">💬</span><div><div style="font-size:14px;font-weight:700;color:#4ade80">WhatsApp Support</div><div style="font-size:12px;color:var(--text-muted)">Chat with admin</div></div></a>`;
+  if(s.telegram) html+=`<a href="${esc(s.telegram)}" target="_blank" style="display:flex;align-items:center;gap:10px;background:rgba(14,165,233,0.06);border:1px solid rgba(14,165,233,0.2);border-radius:14px;padding:14px 16px;margin-bottom:10px;text-decoration:none;color:inherit"><span style="font-size:24px">✈️</span><div><div style="font-size:14px;font-weight:700;color:#38bdf8">Telegram Channel</div><div style="font-size:12px;color:var(--text-muted)">Follow for updates</div></div></a>`;
+  if(!html) html=`<div class="empty-state"><span class="icon">⏳</span>Loading payment methods...</div>`;
+  el.innerHTML=html;
+}
+
+// ── ACTIVATE VIP ──
+window.activateVIP=async function(){
+  const password=document.getElementById("vipPassword").value.trim();
+  const uid=getUid();
+  const msg=document.getElementById("vipMsg");
+  msg.innerHTML="";
+  if(!password){ msg.innerHTML="<div class='msg-error'>❌ Enter VIP password</div>"; return }
+  if(!uid){ msg.innerHTML="<div class='msg-error'>❌ Please login first</div>"; return }
+  setBtn("activateVipBtn",true,"Verifying...","🔓 Unlock VIP Now");
+  try{
+    const q=query(collection(db,"vipPasswords"),where("password","==",password));
+    const snap=await getDocs(q);
+    if(snap.empty){ msg.innerHTML="<div class='msg-error'>❌ Invalid password</div>"; return }
+    const passDoc=snap.docs[0];
+    const p=passDoc.data();
+    if(p.used===true){ msg.innerHTML="<div class='msg-error'>❌ Password already used</div>"; return }
+    const exp=getSafeDate(p.expiry);
+    if(p.duration!=="Never"&&exp&&exp.getTime()<=Date.now()){ msg.innerHTML="<div class='msg-error'>❌ Expired password</div>"; return }
+    const now=new Date();
+    let realExpiry=null;
+    if(p.duration==="1 Day"){ realExpiry=new Date(now.getTime()+24*3600*1000); realExpiry.setHours(23,59,59,999) }
+    else if(p.duration==="1 Week"){ realExpiry=new Date(now.getTime()+7*24*3600*1000); realExpiry.setHours(23,59,59,999) }
+    else if(p.duration==="1 Month"){ realExpiry=new Date(now); realExpiry.setMonth(realExpiry.getMonth()+1); realExpiry.setHours(23,59,59,999) }
+    const updateData={isVIP:true,plan:"VIP",vipActivatedAt:serverTimestamp(),activatedPassword:password,updatedAt:serverTimestamp()};
+    if(realExpiry) updateData.vipExpiry=Timestamp.fromDate(realExpiry);
+    else updateData.vipExpiry=null;
+    await updateDoc(doc(db,"users",uid),updateData);
+    await updateDoc(doc(db,"vipPasswords",passDoc.id),{used:true,usedBy:uid,usedAt:serverTimestamp()});
+    await addDoc(collection(db,"passwordUsageLogs"),{userId:uid,password,usedAt:serverTimestamp(),duration:p.duration});
+    document.getElementById("vipPassword").value="";
+    msg.innerHTML="<div class='msg-success vip-unlock-anim'>💎 Welcome to VIP! Access unlocked!</div>";
+    playSound("successSound");
+    await loadCurrentUser();
+    await loadTips();
+    renderVipState();
+  }catch(e){ msg.innerHTML="<div class='msg-error'>❌ "+esc(e.message)+"</div>" }
+  finally{ setBtn("activateVipBtn",false,"Verifying...","🔓 Unlock VIP Now") }
+};
+
+window.activateVIPFromSecondBox=function(){
+  document.getElementById("vipPassword").value=document.getElementById("vipPassword2").value.trim();
+  showSection("tips");
+  activateVIP();
+};
+
+// ── COINS VIP ──
+window.useCoinsVip=async function(){
+  const uid=getUid(); if(!uid) return;
+  const u=currentUserData||{};
+  const coins=u.coins||0;
+  const msg=document.getElementById("vipMsg");
+  if(coins<10){ msg.innerHTML="<div class='msg-error'>❌ You need at least 10 coins</div>"; return }
+  try{
+    const exp=new Date(Date.now()+24*3600*1000);
+    await updateDoc(doc(db,"users",uid),{
+      coins:coins-10,isVIP:true,plan:"VIP",
+      vipExpiry:Timestamp.fromDate(exp),vipActivatedAt:serverTimestamp(),updatedAt:serverTimestamp()
+    });
+    msg.innerHTML="<div class='msg-success'>🪙 24hr VIP unlocked with coins!</div>";
+    playSound("successSound");
+    await loadCurrentUser(); await loadTips(); renderVipState();
+  }catch(e){ msg.innerHTML="<div class='msg-error'>❌ "+esc(e.message)+"</div>" }
+};
+
+// ── DAILY CHECK-IN ──
+window.doCheckin=async function(){
+  const uid=getUid(); if(!uid) return;
+  const u=currentUserData||{};
+  const today=new Date().toDateString();
+  if(u.lastCheckin===today){ showMsg("proofMsg","info","✅ Already checked in today! Come back tomorrow."); return }
+  try{
+    const coins=(u.coins||0)+2;
+    const checkinDates=[...(u.checkinDates||[]),today];
+    await updateDoc(doc(db,"users",uid),{coins,lastCheckin:today,checkinDates,updatedAt:serverTimestamp()});
+    showMsg("proofMsg","success","🪙 +2 coins! Total: "+coins+" coins");
+    playSound("successSound");
+    await loadCurrentUser();
+    renderCheckinGrid();
+  }catch(e){}
+};
+
+function renderCheckinGrid(){
+  const grid=document.getElementById("checkinGrid"); if(!grid) return;
+  const u=currentUserData||{};
+  const today=new Date().toDateString();
+  const checkins=(u.checkinDates||[]);
+  const days=["M","T","W","T","F","S","S"];
+  let html="";
+  const now=new Date();
+  for(let i=6;i>=0;i--){
+    const d=new Date(now); d.setDate(d.getDate()-i);
+    const ds=d.toDateString();
+    const isToday=ds===today;
+    const done=checkins.includes(ds);
+    html+=`<div class="checkin-day ${done?"done":""} ${isToday&&!done?"today":""}">${done?"✓":days[6-i]}</div>`;
+  }
+  grid.innerHTML=html;
+}
+
+// ── PENDING OVERLAY ──
+function showPendingOverlay(){
+  let count=60;
+  const overlay=document.getElementById("pendingOverlay");
+  overlay.classList.add("show");
+  const ring=document.getElementById("pendingRing");
+  const numEl=document.getElementById("pendingCountNum");
+  const timerEl=document.getElementById("pendingTimer");
+  const circ=239;
+  const iv=setInterval(()=>{
+    count--;
+    numEl.textContent=count;
+    ring.style.strokeDashoffset=circ*(1-count/60);
+    timerEl.textContent="VIP unlocking in "+count+"s";
+    if(count<=0){ clearInterval(iv); overlay.classList.remove("show"); loadCurrentUser(); loadTips(); renderVipState(); }
+  },1000);
+}
+
+// ── PASSWORD DELIVERY BUTTONS ──
+window.copyDeliveredPassword=function(){
+  if(!_deliveredPassword) return;
+  navigator.clipboard.writeText(_deliveredPassword).then(()=>{
+    document.getElementById("deliveryCopyMsg").textContent="✅ Copied!";
+    setTimeout(()=>{ document.getElementById("deliveryCopyMsg").textContent="" },2000);
+  }).catch(()=>{});
+};
+
+window.unlockWithDeliveredPassword=function(){
+  document.getElementById("vipPassword").value=_deliveredPassword;
+  document.getElementById("passwordDeliveryDialog").classList.remove("show");
+  showSection("tips");
+  activateVIP();
+};
+
+window.dismissPasswordDelivery=function(){
+  document.getElementById("passwordDeliveryDialog").classList.remove("show");
+};
+
+// ── NOTIFICATIONS ──
+async function requestNotifPermission(){
+  if(!("Notification"in window)) return;
+  if(localStorage.getItem("firimbi_notif_asked")) return;
+  localStorage.setItem("firimbi_notif_asked","yes");
+  try{ if(Notification.permission==="default") await Notification.requestPermission() }catch(e){}
+}
+
+function sendPhoneNotification(title,body){
+  if(!("Notification"in window)||Notification.permission!=="granted") return;
+  try{ new Notification(title||"Firimbi",{body:body||"New update.",icon:"/favicon.ico"}) }catch(e){}
+}
+
+async function checkBroadcast(){
+  try{
+    const snap=await getDoc(doc(db,"settings","broadcast"));
+    if(!snap.exists()) return;
+    const d=snap.data();
+    if(d.active!==true) return;
+    const ts=getSafeDate(d.createdAt);
+    const stamp=ts?ts.getTime():0;
+    const seen=Number(localStorage.getItem("firimbi_seen_bc")||"0");
+    if(stamp>seen){
+      document.getElementById("adminDialogTitle").textContent=d.title||"Admin Notice";
+      document.getElementById("adminDialogMessage").textContent=d.message||"New update";
+      document.getElementById("adminDialog").classList.add("show");
+      sendPhoneNotification(d.title,d.message);
+      localStorage.setItem("firimbi_seen_bc",String(stamp));
+    }
+  }catch(e){}
+}
+
+window.closeAdminDialog=function(){ document.getElementById("adminDialog").classList.remove("show") };
+window.closeVipExpiredDialog=function(){ document.getElementById("vipExpiredDialog").classList.remove("show") };
+
+// ── MESSAGE HELPER ──
+function showMsg(elId,type,text){
+  const el=document.getElementById(elId); if(!el) return;
+  const cls=type==="success"?"msg-success":type==="error"?"msg-error":"msg-info";
+  el.innerHTML=`<div class="${cls}">${text}</div>`;
+}
+
+// ── PRE-LOGIN DIALOG ──
+const DLG_COLOR_MAP={gold:"linear-gradient(135deg,#d97706,#f59e0b)",green:"linear-gradient(135deg,#059669,#10b981)",blue:"linear-gradient(135deg,#0369a1,#0ea5e9)",red:"linear-gradient(135deg,#b91c1c,#ef4444)",purple:"linear-gradient(135deg,#5b21b6,#7c3aed)",glass:"rgba(255,255,255,0.06)"};
+const DLG_COLOR_TEXT={gold:"#000",green:"#fff",blue:"#fff",red:"#fff",purple:"#fff",glass:"#fff"};
+const DLG_BTN_BORDER={glass:"1px solid rgba(255,255,255,0.1)"};
+
+async function loadAndShowPreLoginDialog(){
+  try{
+    const snap=await getDoc(doc(db,"settings","dialog"));
+    if(!snap.exists()) return;
+    const d=snap.data();
+    if(d.active!==true) return;
+    // Interval check
+    const intervalMs=(d.intervalMinutes||0)*60000;
+    const savedAt=d.updatedAt?d.updatedAt.toMillis?.():(d.updatedAt?.seconds?d.updatedAt.seconds*1000:0);
+    const dismissed=Number(localStorage.getItem("firimbi_dlg_dismissed")||"0");
+    if(intervalMs>0){
+      if(Date.now()-dismissed<intervalMs) return;
+    } else {
+      if(savedAt&&dismissed>=savedAt) return;
+    }
+    _dialogOkLink=d.okLink||"";
+    document.getElementById("pdIcon").textContent=d.icon||"🎉";
+    document.getElementById("pdTitle").textContent=d.title||"";
+    document.getElementById("pdMsg").textContent=d.message||"";
+    const okBtn=document.getElementById("pdOkBtn");
+    okBtn.textContent=d.okLabel||"OK";
+    okBtn.style.background=DLG_COLOR_MAP[d.okColor||"gold"]||DLG_COLOR_MAP.gold;
+    okBtn.style.color=DLG_COLOR_TEXT[d.okColor||"gold"]||"#000";
+    const cancelBtn=document.getElementById("pdCancelBtn");
+    cancelBtn.textContent=d.cancelLabel||"Maybe Later";
+    cancelBtn.style.background=DLG_COLOR_MAP[d.cancelColor||"glass"]||DLG_COLOR_MAP.glass;
+    cancelBtn.style.color=DLG_COLOR_TEXT[d.cancelColor||"glass"]||"#fff";
+    document.getElementById("preLoginDialog").classList.add("show");
+  }catch(e){}
+}
+
+window.handleDialogOk=function(){
+  if(_dialogOkLink){ window.open(_dialogOkLink,"_blank") }
+  closePreLoginDialog();
+};
+window.closePreLoginDialog=function(){
+  document.getElementById("preLoginDialog").classList.remove("show");
+  localStorage.setItem("firimbi_dlg_dismissed",String(Date.now()));
+};
+
+// ── INIT ──
+checkLoggedIn();
+loadAndShowPreLoginDialog();
+</script>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(function(OneSignal) {
+    OneSignal.init({ appId: "dd387c6d-d6e1-4ab0-a364-b9f9c6d50a37" });
+    setTimeout(() => OneSignal.Slidedown.promptPush(), 3000);
+  });
+</script>
+</body>
+</html>
